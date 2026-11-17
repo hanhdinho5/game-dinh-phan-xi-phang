@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.log
+.env*
+!.env.example
+.claude/settings.local.json
+# dữ liệu buổi live (người chơi, phiên, log) lưu trên máy chủ kênh
+data/

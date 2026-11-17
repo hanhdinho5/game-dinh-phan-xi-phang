@@ -1,0 +1,135 @@
+# Từ PHỔ BIẾN: hệ thống chỉ tự ra từ trong danh sách này (lúc không ai nối được, hoặc đổi đường leo).
+# Người chơi thì được nối bằng mọi từ có trong từ điển (words/tu-dien.txt), không chỉ danh sách này.
+# Mỗi dòng nhiều từ, cách nhau dấu phẩy. Sửa xong chạy: pnpm tu-dien
+# Trường học
+học sinh, sinh viên, viên chức, chức vụ, giáo viên, học tập, tập thể, thể thao, thao tác, học hành
+bài tập, bài học, bài thơ, bài hát, hát ca, ca sĩ, sĩ quan, quan tâm, tâm hồn, hồn nhiên
+nhiên liệu, liệu pháp, pháp luật, luật sư, sư tử, tử tế, tế bào, lớp học, học bổng
+bảng đen, đen tối, tối tăm, thầy giáo, giáo dục, cô giáo, giáo án
+trường học, học vấn, vấn đề, đề thi, thi cử, cử nhân, nhân dân, dân tộc, tộc người, người ta
+sách vở, vở kịch, kịch bản, bản đồ, đồ chơi, chơi đùa, bút chì, chì màu, màu sắc, sắc đẹp
+đẹp trai, trai tráng, kiến thức, thức ăn, ăn uống, uống nước, nước mắt, mắt kính, kính trọng, trọng tài
+tài năng, năng lượng, lượng giác, giác ngộ, ngộ nghĩnh, thông minh, minh bạch, bạch tuộc, chăm chỉ, chỉ huy
+huy chương, chương trình, trình độ, độ cao, cao thủ, thủ đô, đô thị, thị trấn, trấn an, an toàn
+toàn bộ, bộ đội, đội ngũ, ngũ cốc, cốc nước, nước ngoài, ngoài trời, trời mưa, mưa phùn
+điểm số, số học, học trò, trò chơi, ôn tập, tập trung, trung thu, thu hoạch, hoạch định
+định mệnh, mệnh lệnh, lệnh bài, phấn trắng, trắng tinh, tinh thần, thần tượng, tượng đài, đài phát, phát triển
+triển lãm, khoa học, học hỏi, hỏi han, toán học, văn học, học phí, phí phạm, phạm vi
+vi khuẩn, sinh nhật, nhật ký, ký túc, túc cầu, cầu thủ, thủ môn, môn học, học kỳ
+kỳ thi, thi đua, đua xe, xe đạp, đạp xe, xe máy, máy bay, bay lượn, lượn lờ, máy tính
+tính toán, toán tử, tính cách, cách mạng, mạng lưới, lưới điện, điện thoại, cảnh sát
+# Gia đình
+gia đình, đình chùa, chùa chiền, cha mẹ, mẹ hiền, hiền lành, lành mạnh, mạnh mẽ, ông bà, bà con
+con cháu, cháu chắt, anh em, em bé, bé bỏng, bỏng ngô, ngô nghê, chị gái, xinh đẹp
+họ hàng, hàng xóm, xóm làng, làng xã, xã hội, hội họp, họp chợ, chợ quê, quê hương, hương thơm
+thơm ngon, ngon lành, tình cảm, cảm ơn, ơn nghĩa, nghĩa vụ, tình yêu, yêu thương
+thương nhớ, nhớ nhung, nhung lụa, lụa là, hạnh phúc, phúc lợi, lợi ích, kỷ niệm, niệm phật
+vợ chồng, chồng chất, chất lượng, nhà cửa, cửa sổ, sổ sách, sách báo, báo chí, chí hướng, hướng dẫn
+dẫn đầu, đầu tiên, tiên nữ, nữ hoàng, hoàng tử, tử vi, con cái, cái đẹp, ngôi nhà, nhà hàng
+# Thiên nhiên, núi rừng
+núi rừng, rừng xanh, xanh tươi, tươi tắn, núi non, non sông, sông núi, núi đồi, đồi núi, đỉnh núi
+leo núi, núi lửa, lửa trại, trại hè, hè phố, phố phường, phường hội, mây trời, trời đất, đất nước
+nước non, non nước, biển cả, cả nhà, cây cối, cối xay, xay lúa, lúa gạo, gạo nếp, nếp sống
+sống động, động vật, vật lý, lý do, do dự, dự án, hoa hồng, hồng hào, hoa lá, lá cây
+cây cầu, cầu vồng, mặt trời, trời xanh, mặt trăng, trăng tròn, tròn trịa, sao sáng, sáng tạo
+tạo hoá, hoá học, gió mùa, mùa xuân, xuân sắc, mùa hè, mùa thu, thu đông, đông đúc, đúc kết
+kết bạn, bạn bè, phái đẹp, mưa rào, rào cản, cản trở, trở lại, lại gần, gần gũi
+sương mù, mù mịt, tuyết rơi, rơi rớt, băng giá, giá cả, cả đời, đời sống, sống còn, còn lại
+thiên nhiên, nhiên hậu, thác nước, nước mưa, mưa bão, bão tố, tố chất, chất đốt, đốt cháy, cháy nắng
+nắng vàng, vàng bạc, bạc màu, đá quý, quý giá, giá trị, trị giá, hang động, động đất, đất đai
+đai lưng, lưng chừng, chừng mực, mực nước, ruộng bậc, bậc thang, thang máy, máy móc, móc treo
+# Động vật
+con mèo, mèo con, con chó, con gà, gà trống, trống đồng, đồng hồ, hồ nước
+con voi, voi rừng, cá vàng, vàng ròng, chim sẻ, sẻ chia, chia sẻ, con trâu, trâu bò
+bò sữa, sữa chua, chua ngọt, ngọt ngào, ngào ngạt, con ong, ong mật, mật ong, ong vàng, con heo
+heo rừng, rừng rậm, đột phá, phá vỡ, mộng mơ, mơ ước, ước mơ, con ngựa
+ngựa ô, ô tô, tô điểm, điểm danh, danh sách, chim én, én bay, gấu bông
+bông hoa, hoa sen, sen vàng, rùa biển, biển xanh, cá heo, heo đất, đất sét
+khủng long, long lanh, lanh lợi, lợi thế, thế giới, giới hạn, hạn chế, chế tạo, tạo dáng
+# Ăn uống
+bánh mì, mì tôm, tôm hùm, phở bò, bò bía, cơm tấm, tấm lòng, lòng tốt, tốt bụng
+bụng đói, đói khát, khát vọng, vọng cổ, cổ tích, tích cực, cực kỳ, kỳ diệu, diệu kỳ, bánh chưng
+chưng cất, cất cánh, cánh đồng, đồng ruộng, ruộng đồng, trà sữa, sữa tươi, tươi cười, cười đùa, đùa giỡn
+cà phê, phê bình, bình an, an vui, vui vẻ, vẻ đẹp, nước chấm, chấm điểm, điểm tâm, tâm sự
+sự thật, thật thà, thà rằng, bún chả, chả giò, giò lụa, tơ tằm, trái cây, cây xanh
+xanh lá, lá thư, thư viện, viện trợ, trợ giúp, giúp đỡ, đỡ đần, kẹo mút, bánh kẹo
+kẹo dẻo, dẻo dai, dai dẳng, nước mắm, mắm tôm, tôm khô, khô héo, xôi gấc, gấc đỏ, đỏ tươi
+cơm chiên, chiên giòn, giòn tan, tan học, học thuộc, thuộc lòng, lòng tin, tin tức, tức giận, giận dỗi
+# Cơ thể, sức khoẻ
+sức khoẻ, khoẻ mạnh, mạnh dạn, dạn dĩ, bàn tay, tay chân, chân thành, thành công, công việc, việc làm
+làm việc, việc nhà, nhà thơ, thơ ca, ca dao, dao kéo, kéo co, co giãn
+khuôn mặt, mặt nạ, đôi mắt, mắt xích, xích đu, đu quay, quay phim, phim ảnh, ảnh hưởng
+hưởng thụ, thụ động, động lực, lực sĩ, trái tim, tim đập, đập vỡ, nụ cười, cười tươi, tươi sáng
+sáng sủa, bác sĩ, sĩ tử, bệnh viện, viện phí, y tá, điền kinh, kinh tế, tế nhị
+nhị phân, phân biệt, biệt thự, giấc ngủ, ngủ say, say mê, man mát, mát mẻ
+# Nghề nghiệp, xã hội
+công nhân, nhân viên, nông dân, dân ca, ca hát, hát hò, hò hẹn, hẹn hò, kỹ sư, sư phạm
+phạm lỗi, lỗi lầm, đầu bếp, bếp núc, nhà báo, báo cáo, già làng, làng quê
+quê nhà, nhà máy, máy ảnh, ảnh đẹp, doanh nhân, nhân tài, tài xế, xế chiều, chiều tà, tà áo
+áo dài, dài dòng, dòng sông, sông nước, nước ngọt, ngọt lịm, thợ may, may mắn
+cảnh đẹp, nghệ sĩ, sĩ diện, diện mạo, mạo hiểm, hiểm nguy, nguy hiểm, hoạ sĩ, sĩ số
+số phận, phận sự, sự kiện, công an, an ninh, ninh thuận, thuận lợi, lợi nhuận, nhuận bút
+bút bi, bi kịch, kịch tính, tính tình, tình bạn, bạn thân, thân thiện, thiện chí, chí khí, khí hậu
+hậu quả, quả cam, cam kết, kết thúc, thúc đẩy, đẩy mạnh, mạnh khoẻ, khoẻ khoắn, buôn bán, bán hàng
+hàng hoá, hoá đơn, đơn giản, giản dị, dị ứng, ứng xử, xử lý, lý tưởng, tưởng tượng, tượng hình
+# Giao thông, đồ vật
+xe buýt, xe lửa, lửa đỏ, đỏ mặt, mặt đất, đất liền, liền kề, kề vai, vai trò, trò hề
+tàu hoả, nhân vật, vật chất, thuyền buồm, buồm căng, đèn đỏ, đèn pin
+pin sạc, đường phố, phố cổ, cổ điển, điển hình, hình ảnh, ảnh chụp, chụp hình, hình dáng, dáng vẻ
+cái bàn, bàn ghế, ghế đá, đá bóng, bóng đá, đá cầu, cầu lông, lông vũ, vũ trụ, trụ cột
+cột cờ, cờ vua, vua chúa, tướng quân, quân đội, đội trưởng, trưởng thành, thành phố
+phố xá, cái ô, ô dù, dù sao, sao chép, chép phạt, phạt đền, đền bù, bù đắp, đắp chăn
+chăn nuôi, nuôi dạy, dạy học, học viên, viên đá, quý báu, báu vật, vật dụng, dụng cụ
+cụ thể, thể lực, gương mặt, mặt bàn, bàn chải, chải tóc, tóc dài, ti vi, vi tính, tủ lạnh
+lạnh lùng, tủ sách, sách đỏ, đỏ rực, rực rỡ, ràng buộc, buộc tóc, tóc tiên
+điều hoà, hoà bình, bình minh, minh hoạ, hoạ mi, mi mắt, mắt mèo, mèo mướp, quạt máy, máy giặt
+giặt giũ, nồi cơm, cơm nước, nước hoa, hoa quả, quả bóng, bóng bay, bay bổng, bổng lộc, lộc non
+non trẻ, trẻ con, con đường, đường đi, đi học, học giỏi, giỏi giang, giang sơn, sơn hà, hà mã
+# Âm nhạc, giải trí, lễ tết
+âm nhạc, nhạc sĩ, sĩ khí, khí thế, thế hệ, hệ thống, thống nhất, nhất định, định vị, vị trí
+trí tuệ, tuệ giác, giác quan, quan sát, sát cánh, cánh diều, ngày tết
+nguyên đán, lì xì, pháo hoa, hoa đào, đào tạo, tạo ra, ra mắt, mắt xanh, xanh rì
+hoa mai, mai mối, mối tình, tình nghĩa, nghĩa trang, trang phục, phục vụ, vụ mùa, mùa màng
+du lịch, lịch sử, sử sách, sách hay, hay ho
+ca nhạc, nhạc cụ, cụ già, già nua, đàn bầu, bầu trời, trời ơi, sân khấu, khấu trừ
+hoạt hình, hình học, học lực, lực lượng, lượng mưa, mưa đá, đá phạt, lễ hội, hội chợ
+chợ đêm, đêm khuya, khuya khoắt, đêm trăng, trăng rằm, tháng giêng, múa lân, la hét
+# Tính chất, cảm xúc
+vui mừng, mừng rỡ, buồn bã, đậu phụ, phụ nữ, nữ sinh, sinh động, động viên, viên mãn
+mãn nguyện, nguyện vọng, vọng gác, gác mái, mái nhà, nhà nước, nước da, da trắng, trắng trẻo
+dũng cảm, cảm động, động não, não bộ, bộ phim, phim truyện, truyện cười, cười nói, nói chuyện, chuyện trò
+trò chuyện, chuyện tình, tình người, người yêu, yêu đời, đời thường, thường xuyên, xuyên suốt, suốt đời, đời người
+thật lòng, biết ơn, ơn huệ, huệ trắng, cô đơn, đơn côi, chân trời, trời sáng, sáng sớm
+sớm mai, mai sau, sau này, này nọ, nhanh nhẹn, nhẹ nhàng, chậm chạp
+hiền hậu, đậu xanh, xanh xao, xao xuyến, kiên nhẫn, nhẫn nại, siêng năng
+năng động, động cơ, cơ thể, thể hiện, hiện đại, đại học, học thức, thức khuya, vui tươi, tươi vui
+# Phan Xi Păng, du lịch, địa danh chung
+cáp treo, treo tranh, tranh luận, luận văn, văn hoá, hoá trang, trang trí, trí nhớ, nhớ thương, thương yêu
+yêu quý, quý mến, mến khách, khách sạn, đạo đức, đức tính, tính năng, ruộng lúa, lúa mì
+mì ý, ý kiến, kiến trúc, trúc xanh, xanh ngắt, quãng đường, đường mòn, mòn mỏi, mỏi mệt
+mệt mỏi, mỏi tay, tay nghề, nghề nghiệp, nghiệp dư, dư thừa, thừa kế, kế hoạch, chinh phục
+phục hồi, hồi hộp, hộp quà, quà tặng, tặng hoa, hoa ban, ban ngày, ngày mai, mai vàng, vàng anh
+anh hùng, hùng vĩ, vĩ đại, đại dương, dương cầm, cầm tay, tay trái, trái đất
+đỉnh cao, cao nguyên, nguyên liệu, nguyên tắc, tắc đường, đường hầm, hầm mỏ, mỏ vàng, vàng son, son môi
+môi trường, trường kỳ, kỳ vọng, phu nhân, nhân hậu, chiến thắng, thắng lợi
+lợi dụng, dụng ý, ý nghĩa, nghĩa đen, cố gắng, gắng sức, sức mạnh, mạnh tay
+# Thêm cho dễ nối tiếp
+an tâm, tâm trạng, trạng nguyên, nguyên vẹn, vẹn toàn, toàn cầu, cầu thang, thang điểm, điểm cao, cao lớn
+lớn lao, lao động, động tác, tác giả, giả vờ, vờ vịt, quay về, về nhà, nhà vua
+vua bếp, bếp lửa, gần xa, xa lạ, lạ lùng, ngọn lửa, lửa tình, tình thương
+thương hiệu, hiệu trưởng, trưởng ban, ban đêm, đêm đông, đông vui, vui chơi, chơi xuân, xuân về, về quê
+quê ngoại, ngoại ngữ, ngữ văn, văn minh, minh chứng, chứng minh, minh tinh, tinh tú, tú tài, tài sản
+sản phẩm, phẩm chất, chất liệu, dữ dội, nước đá
+đá banh, nhựa sống, đuối sức, mùa đông, đông lạnh
+lạnh giá, giá rét, rét buốt, giá đỗ, đỗ đạt, đạt được, được mùa, mùa mưa, mưa dầm
+nhà thờ, thờ cúng, dường như, như ý, ý chí, chí công, công bằng, bằng lòng
+tự hào, hào hứng, hứng thú, thú vị, vị ngọt, ngọt mát, mát lạnh
+tiếng việt, việt nam, nam nữ, nữ tính, tính từ, từ điển, điển trai, trai làng, làng nghề, nghề mộc
+mộc mạc, câu đố, đố vui, vui lòng, lòng dạ, dạ hội, hội đồng, đồng đội, đội hình
+hình thức, thức dậy, dậy sớm, nắng mưa, mưa nắng, nắng gắt, cơ hội
+hội thao, thao thức, thức giấc, giấc mơ, mơ màng, lễ phép, phép thuật, thuật ngữ
+ngữ pháp, pháp sư, sư thầy, thầy thuốc, vang vọng, vọng lại
+# Thêm để chuỗi ít bị bí (nối tiếp các tiếng hay cụt)
+hành động, hành trình, hành lý, hành tinh, ích lợi, phật tử, bè bạn, chó mèo, lý lịch, lịch sự, sự nghiệp, tráng lệ, lệ phí
+chắt chiu, bạn học, gỉ sét, vỡ òa, rậm rạp, ngạt thở, thở dài, dài hạn, hạn hán, án ngữ, ngữ điệu, điệu múa, múa hát
+lờ đờ, mịt mù, mù tạt, rớt giá
