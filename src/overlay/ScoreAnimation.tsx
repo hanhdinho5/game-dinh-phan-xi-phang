@@ -46,20 +46,20 @@ export function useToasts() {
 
 export function ToastView({ toast }: { toast: Toast | null }) {
   return (
-    <div className="relative h-[46px] w-full max-w-[470px]">
+    <div className="relative h-[54px] w-full max-w-[440px]">
       <AnimatePresence>
         {toast && (
           <motion.div
             key={toast.id}
-            className={`absolute right-0 top-0 flex h-[46px] max-w-full items-center gap-2 rounded-full pl-1 pr-4 font-extrabold shadow-lg ${KIND_STYLE[toast.kind]}`}
+            className={`absolute right-0 top-0 flex h-[54px] max-w-full items-center gap-2 rounded-full pl-1 pr-4 font-extrabold shadow-lg ${KIND_STYLE[toast.kind]}`}
             initial={{ x: 80, opacity: 0, scale: 0.8 }}
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ y: -30, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 380, damping: 24 }}
           >
-            <Avatar src={toast.avatar} name={toast.name} id={toast.userId} size={38} />
-            <span className="truncate text-[21px]">
-              {shortName(toast.name, 14)} <span className="font-bold opacity-80">{toast.text}</span>
+            <Avatar src={toast.avatar} name={toast.name} id={toast.userId} size={44} />
+            <span className="truncate text-[25px]">
+              {shortName(toast.name, 10)} <span className="font-bold opacity-80">{toast.text}</span>
             </span>
           </motion.div>
         )}

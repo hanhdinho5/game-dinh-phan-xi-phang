@@ -11,7 +11,7 @@ set LIVE_MODE=1
 set PORT=3007
 start "" cmd /c "timeout /t 8 >nul & start http://localhost:3007"
 :chay
-call pnpm dev
+call pnpm start
 echo.
 echo [%date% %time%] Server bi tat, tu bat lai sau 5 giay... (dong cua so nay de tat han)
 timeout /t 5 >nul

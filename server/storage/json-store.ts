@@ -52,11 +52,30 @@ export class JsonStore {
   }
 
   read<T>(name: string, fallback: T): T {
+    let raw: string;
     try {
-      return JSON.parse(fs.readFileSync(this.file(name), 'utf8')) as T;
+      raw = fs.readFileSync(this.file(name), 'utf8');
     } catch (err) {
       if ((err as NodeJS.ErrnoException).code !== 'ENOENT') this.log.warn(`Không đọc được ${name}: ${(err as Error).message}`);
       return fallback;
+    }
+    try {
+      return JSON.parse(raw) as T;
+    } catch (err) {
+      this.quarantine(name, err);
+      return fallback;
+    }
+  }
+
+  /** File JSON hỏng: giữ lại bản hỏng (đổi tên) để lần ghi sau không đè mất, rồi dùng giá trị mặc định */
+  private quarantine(name: string, err: unknown) {
+    const from = this.file(name);
+    const to = `${from}.corrupt-${Date.now()}`;
+    try {
+      fs.renameSync(from, to);
+      this.log.error(`${name} bị hỏng (${(err as Error).message}). Đã giữ bản hỏng ở ${path.basename(to)}, dùng giá trị mặc định`);
+    } catch (e) {
+      this.log.error(`${name} bị hỏng và không đổi tên được`, e);
     }
   }
 

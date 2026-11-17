@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { motion } from 'motion/react';
 import type { PlayerView } from '../../shared/types';
-import { Avatar, shortName } from './Avatar';
+import { Avatar, displayName } from './Avatar';
 
 const W = 1032;
 const H = 196;
@@ -22,10 +22,10 @@ export function MountainTrail({ seats, ended }: { seats: PlayerView[]; ended: bo
   const top = seats.filter((p) => p.score > 0).slice(0, 5);
   const scale = Math.max(30, (top[0]?.score ?? 0) * 1.15);
   return (
-    <div className="pxp-panel absolute overflow-hidden" style={{ left: 24, top: 766, width: W, height: H }}>
+    <div className="pxp-panel absolute overflow-hidden" style={{ left: 24, top: 692, width: W, height: H }}>
       <TrailArt />
       {top.length === 0 && (
-        <div className="absolute left-8 top-6 text-[28px] font-bold text-white/80">Nối đúng để leo lên đỉnh</div>
+        <div className="absolute left-8 top-6 text-[34px] font-bold text-white/85">Nối đúng để leo lên đỉnh</div>
       )}
       {/* vẽ người thấp trước để người dẫn đầu nằm trên */}
       {placed(top, scale, ended).reverse().map(({ p, t }) => {
@@ -41,13 +41,15 @@ export function MountainTrail({ seats, ended }: { seats: PlayerView[]; ended: bo
           >
             {/* chỉ người dẫn đầu có bảng tên (5 bảng tên chen nhau sẽ đè lên nhau) */}
             {p.rank === 1 && (
-              <div className="absolute bottom-full mb-1 whitespace-nowrap rounded-full bg-amber-300 px-3 text-[17px] font-extrabold text-slate-900 shadow-lg">
-                👑 {shortName(p.nickname, 12)} · {p.score}
+              <div
+                className={`absolute top-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-amber-300 px-3 text-[26px] font-extrabold leading-[1.35] text-slate-900 shadow-lg ${pos.x > 800 ? 'right-full mr-3' : 'left-full ml-3'}`}
+              >
+                👑 {displayName(p.nickname, 10)} · {p.score}
               </div>
             )}
             <div className="relative">
               <Avatar src={p.avatar} name={p.nickname} id={p.userId} size={size} ring={p.rank === 1 ? '#ffc83d' : '#ffffff'} />
-              <span className="absolute -left-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-amber-300 text-[16px] font-extrabold text-slate-900">
+              <span className="absolute -left-2 -top-2 flex h-9 w-9 items-center justify-center rounded-full bg-amber-300 text-[22px] font-extrabold text-slate-900">
                 {p.rank}
               </span>
             </div>
@@ -86,7 +88,7 @@ const TrailArt = memo(function TrailArt() {
       {marks.map((m) => (
         <g key={m.label}>
           <circle cx={m.x} cy={m.y} r="6" fill="#ffc83d" />
-          <text x={m.x} y={m.y + 30} textAnchor="middle" fontSize="18" fontWeight="700" fill="rgba(255,255,255,0.7)">
+          <text x={m.x} y={m.y + 30} textAnchor="middle" fontSize="24" fontWeight="800" fill="rgba(255,255,255,0.7)">
             {m.label}
           </text>
         </g>
@@ -97,7 +99,7 @@ const TrailArt = memo(function TrailArt() {
         <rect x="941" y="-4" width="44" height="28" fill="#da251d" />
         <polygon points="963,3 965.4,8.6 971.4,8.6 966.6,12.2 968.4,18 963,14.5 957.6,18 959.4,12.2 954.6,8.6 960.6,8.6" fill="#ffde00" />
       </g>
-      <text x="1018" y="140" textAnchor="end" fontSize="22" fontWeight="800" fill="#ffc83d">
+      <text x="1018" y="140" textAnchor="end" fontSize="30" fontWeight="800" fill="#ffc83d">
         ĐỈNH 3.143m
       </text>
     </svg>

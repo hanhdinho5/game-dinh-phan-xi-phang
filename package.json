@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server/index.ts",
-    "start": "tsx server/index.ts",
+    "start": "vite build && tsx server/index.ts --prod",
     "build": "vite build",
     "lint": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",

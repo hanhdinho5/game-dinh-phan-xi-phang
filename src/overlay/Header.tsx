@@ -16,12 +16,12 @@ export function Header({ s }: { s: OverlayState }) {
         ⛰️
       </div>
       <div className="ml-5 min-w-0 flex-1">
-        <div className="pxp-display text-[40px] font-extrabold leading-none tracking-wide text-sky-200 drop-shadow-[0_3px_0_rgba(10,8,40,0.9)]">ĐƯỜNG LÊN ĐỈNH</div>
+        <div className="pxp-display text-[42px] font-extrabold leading-none tracking-wide text-sky-200 drop-shadow-[0_3px_0_rgba(10,8,40,0.9)]">ĐƯỜNG LÊN ĐỈNH</div>
         <div className="pxp-display pxp-gold-text text-[86px] font-extrabold leading-[1.02]">PHAN XI PĂNG</div>
       </div>
       <div className="flex flex-none flex-col items-end gap-2">
-        <div className={`pxp-pill text-[24px] ${ph.cls}`}>{ph.text}</div>
-        <div className="pxp-pill bg-black/45 text-[26px]">
+        <div className={`pxp-pill text-[28px] ${ph.cls}`}>{ph.text}</div>
+        <div className="pxp-pill bg-black/45 text-[30px]">
           👥 <b className="text-amber-300">{s.totalPlayers}</b> người chơi
         </div>
       </div>
@@ -37,8 +37,8 @@ export function RulesTicker({ s }: { s: OverlayState }) {
     .join(' • ');
   const text = `Comment JOIN để tham gia  •  Comment 1 tiếng để nối từ  •  ${tiers}  •  Sai không trừ điểm  •  `;
   return (
-    <div className="absolute overflow-hidden rounded-full bg-black/55" style={{ left: 24, top: 1846, width: 1032, height: 52 }}>
-      <div className="pxp-ticker flex w-max whitespace-nowrap text-[26px] font-bold leading-[52px] text-white/90">
+    <div className="absolute overflow-hidden rounded-full bg-black/55" style={{ left: 24, top: 1844, width: 1032, height: 56 }}>
+      <div className="pxp-ticker flex w-max whitespace-nowrap text-[30px] font-bold leading-[56px] text-white/95">
         <span className="pr-4">{text}</span>
         <span className="pr-4">{text}</span>
       </div>

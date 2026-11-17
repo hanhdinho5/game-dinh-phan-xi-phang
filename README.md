@@ -1,6 +1,6 @@
 # ⛰️ Đường Lên Đỉnh Phan Xi Păng
 
-Mini-game nối từ tiếng Việt cho TikTok LIVE. Màn hình hiện một từ ghép (vd **HỌC SINH**), người xem comment **1 tiếng** để nối thành từ mới (**VIÊN** → SINH VIÊN). Ai nối đúng nhanh hơn được nhiều điểm hơn, ghế tự xếp theo điểm, không ai bị loại. Có MC đọc đề, đọc kết quả và vinh danh Top 4 cuối mỗi cuộc đua.
+Mini-game nối từ tiếng Việt cho TikTok LIVE. Màn hình hiện một từ ghép (vd **HỌC SINH**), người xem comment **1 tiếng** để nối thành từ mới (**VIÊN** → SINH VIÊN). Ai nối đúng nhanh hơn được nhiều điểm hơn, bảng xếp hạng tự sắp theo điểm (huy hiệu đỏ là điểm của từng người), không ai bị loại. Có MC đọc đề, đọc kết quả và vinh danh Top 4 cuối mỗi cuộc đua.
 
 ## Luật chơi
 
@@ -9,7 +9,7 @@ Mini-game nối từ tiếng Việt cho TikTok LIVE. Màn hình hiện một t�
 - Mọi đáp án đúng (có trong từ điển, chưa dùng trong cuộc đua) đều được tính. Hết giờ mới chốt, xếp theo giờ TikTok gắn lúc người xem gửi.
 - Điểm: Top 1 +9, Top 2 +7, Top 3 +5, Top 4 +3, Top 5–10 +2, Top 11–20 +1 (đổi trong Cấu hình).
 - Mỗi người chỉ được tính 1 lần mỗi chặng. Sai không bị trừ điểm, nhưng sai quá 3 lần trong 1 chặng thì chặng đó thôi nhận.
-- **Từ tiếp theo do hệ thống chọn** (không lấy đáp án người chơi): một từ phổ biến nối tiếp từ hiện tại, chưa dùng, ưu tiên từ mà chặng sau vẫn dễ nối. Hết từ để nối thì đổi sang từ mới.
+- **Từ mỗi chặng do hệ thống chọn ngẫu nhiên** (không lấy đáp án người chơi, không nối với từ chặng trước): một từ phổ biến chưa dùng, tiếng cuối khác từ trước, và vẫn còn từ để nối. Nhờ vậy bình luận trễ của chặng trước không lẫn sang chặng sau.
 - **Cuộc đua**: đặt số chặng mỗi cuộc đua (0 = bấm Kết thúc bằng tay). Kết thúc thì vinh danh Top 4, MC đọc tên hạng 4 → 3 → 2 → vô địch, rồi tự mở cuộc đua mới (giữ người chơi, điểm về 0, dọn người không bình luận 10 phút). Tắt được trong Cấu hình hoặc bấm "Huỷ tự mở".
 
 ## Cài và chạy
@@ -17,7 +17,9 @@ Mini-game nối từ tiếng Việt cho TikTok LIVE. Màn hình hiện một t�
 Cần Node.js 20.19+ (khuyên dùng 22 LTS).
 
 - **Windows**: bấm đúp `BAT-LIVE.bat`.
-- **Linux / Mac**: `./chay-live.sh` (hoặc `pnpm install` rồi `pnpm dev`).
+- **Linux / Mac**: `./chay-live.sh` (hoặc `pnpm install` rồi `pnpm start`).
+
+Cần cài [pnpm](https://pnpm.io) trước (`corepack enable` hoặc `npm i -g pnpm`). Hai file chạy live dùng `pnpm start`: tự build rồi chạy bản đã build (nhẹ, ổn định). Sửa code khi đang phát triển thì dùng `pnpm dev`.
 
 Trang Admin: http://localhost:3007. Overlay cho **TikTok LIVE Studio**: thêm nguồn **Link** `http://lvh.me:3007/?view=overlay`, khổ **1080 × 1920**. LIVE Studio không nhận `localhost`; `lvh.me` trỏ về chính máy mình.
 

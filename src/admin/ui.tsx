@@ -28,7 +28,7 @@ interface ButtonProps {
   /** có thể trả Promise: trong lúc chờ nút hiện trạng thái đang xử lý và bị khoá */
   onClick?: () => unknown;
   tone?: ButtonTone;
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   title?: string;
   type?: 'button' | 'submit';
@@ -53,7 +53,7 @@ export function Button({ children, onClick, tone = 'slate', size = 'md', disable
       }
     }
   };
-  const sz = size === 'sm' ? 'px-2 py-1 text-xs' : 'px-3 py-2 text-sm';
+  const sz = size === 'sm' ? 'px-2 py-1 text-xs' : size === 'lg' ? 'px-5 py-3 text-base' : 'px-3 py-2 text-sm';
   return (
     <button
       type={type}

@@ -586,6 +586,13 @@ export class PhanXiPangEngine {
     const answering = !!r && !r.isFinalized && this.phase !== 'ended';
     // tạm dừng mà chưa có chặng (admin vừa đổi từ / vừa bật lại máy): hiện từ sắp chơi, đồng hồ đầy
     const upcoming = !r && this.phase === 'paused';
+    const correct = answering ? r!.provisional() : [];
+    const wrong = answering ? r!.wrongUsers() : [];
+    const seatViews = this.players.views(seatCount, seatCount).map(maskView);
+    const seated = new Set(seatViews.map((v) => v.userId));
+    const marks: Record<string, 'ok' | 'bad'> = {};
+    for (const e of wrong) if (seated.has(e.userId)) marks[e.userId] = 'bad';
+    for (const e of correct) if (seated.has(e.userId)) marks[e.userId] = 'ok';
     const shownWord = upcoming ? this.nextWord || this.currentWord : this.currentWord || this.nextWord || this.config.startWord;
     return {
       serverNow: now,
@@ -598,13 +605,14 @@ export class PhanXiPangEngine {
       roundEndsAt: r?.endsAt ?? 0,
       remainingMs: upcoming ? this.config.roundSeconds * 1000 : remaining,
       roundTotalMs: r?.durationMs ?? this.config.roundSeconds * 1000,
-      provisional: answering
-        ? r!.provisional().slice(0, 30).map((e) => ({ userId: e.userId, nickname: maskBanned(e.nickname), avatar: e.avatar, rank: e.rank }))
-        : [],
+      provisional: correct.slice(0, 30).map((e) => ({ userId: e.userId, nickname: maskBanned(e.nickname), avatar: e.avatar, rank: e.rank })),
+      wrong: wrong.slice(-30).map((e) => ({ userId: e.userId, nickname: maskBanned(e.nickname), avatar: e.avatar })),
+      wrongCount: wrong.length,
+      marks,
       lastResult: this.lastResult,
       chain: this.chain.slice(-MAX_CHAIN_VIEW),
       chainStart: Math.max(0, this.chain.length - MAX_CHAIN_VIEW),
-      seats: this.players.views(seatCount, seatCount).map(maskView),
+      seats: seatViews,
       waitingCount: Math.max(0, this.players.count - seatCount),
       totalPlayers: this.players.count,
       config: {

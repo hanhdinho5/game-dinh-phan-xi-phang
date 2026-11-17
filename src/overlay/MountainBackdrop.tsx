@@ -41,12 +41,20 @@ export const MountainBackdrop = memo(function MountainBackdrop() {
         <circle key={i} className="pxp-twinkle" style={{ animationDelay: `${s.d}s` }} cx={s.x} cy={s.y} r={s.r} fill="#fff" />
       ))}
       <circle cx="820" cy="1480" r="420" fill="url(#pxp-sun)" />
+      <g className="pxp-beams" opacity="0.16">
+        {Array.from({ length: 12 }, (_, i) => (
+          <path key={i} d="M820 1480 L560 -400 L760 -400 Z" fill="#ffe9a8" transform={`rotate(${i * 30} 820 1480)`} />
+        ))}
+      </g>
       {/* lớp núi xa */}
       <path d="M0 1380 L120 1250 L210 1310 L330 1150 L430 1260 L560 1100 L690 1240 L800 1130 L930 1250 L1080 1160 L1080 1920 L0 1920 Z" fill="url(#pxp-m1)" opacity="0.9" />
       {/* đỉnh Phan Xi Păng ở giữa */}
       <path d="M0 1560 L170 1420 L300 1480 L470 1260 L560 1180 L640 1280 L760 1360 L880 1300 L1080 1460 L1080 1920 L0 1920 Z" fill="url(#pxp-m2)" />
       <path d="M520 1218 L560 1180 L600 1232 L582 1226 L566 1246 L548 1228 L532 1240 Z" fill="#e9f4ff" opacity="0.92" />
       <path d="M0 1700 L140 1610 L290 1660 L420 1580 L560 1640 L700 1570 L860 1650 L1080 1600 L1080 1920 L0 1920 Z" fill="url(#pxp-m3)" />
+      {Array.from({ length: 16 }, (_, i) => (
+        <circle key={`e${i}`} className="pxp-ember" style={{ animationDelay: `${(i * 0.9) % 9}s` }} cx={(i * 211) % 1080} cy={1900 - ((i * 53) % 200)} r={3 + (i % 3)} fill="#ffd36b" />
+      ))}
       <g className="pxp-cloud" opacity="0.5">
         <ellipse cx="200" cy="1330" rx="220" ry="34" fill="#ffd6e7" />
         <ellipse cx="760" cy="1250" rx="260" ry="30" fill="#ffd6e7" />

@@ -110,7 +110,7 @@ export interface RoundResult {
   no: number;
   word: string; // từ của lượt đó
   nextWord: string;
-  /** từ tiếp theo do hệ thống chọn: auto = nối tiếp từ hiện tại; jump = đổi sang từ mới (bí đường);
+  /** từ tiếp theo do hệ thống chọn: auto = hệ thống chọn ngẫu nhiên; jump = đổi sang từ mới (bí đường);
    *  admin = admin đổi; end = chặng cuối của cuộc đua (không có từ tiếp, nextWord rỗng) */
   nextSource: 'auto' | 'jump' | 'admin' | 'end';
   winners: RoundWinner[];
@@ -149,6 +149,12 @@ export interface OverlayState {
   roundTotalMs: number;
   /** những người đã nối đúng trong lượt (tạm tính, chưa có đáp án) */
   provisional: { userId: string; nickname: string; avatar: string; rank: number }[];
+  /** những người đã gửi đáp án SAI trong lượt (chỉ người + avatar, không lộ đáp án), cũ -> mới; tối đa 30 */
+  wrong: { userId: string; nickname: string; avatar: string }[];
+  /** số người sai (đầy đủ) */
+  wrongCount: number;
+  /** dấu trên avatar của người đang ngồi ghế: ok = đã nối đúng, bad = đã gửi sai (chỉ trong lúc chặng chạy) */
+  marks: Record<string, 'ok' | 'bad'>;
   lastResult: RoundResult | null;
   chain: ChainItem[];
   /** vị trí của chain[0] trong cả chuỗi (làm key ổn định cho hiệu ứng) */

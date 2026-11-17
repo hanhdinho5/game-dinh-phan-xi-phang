@@ -16,6 +16,21 @@ export class Logger {
     private readonly quiet = false,
   ) {}
 
+  /** Xoá file log cũ hơn `days` ngày (chỉ file dạng YYYY-MM-DD.log) */
+  prune(days = 30) {
+    if (!this.dir) return;
+    try {
+      const cutoff = Date.now() - days * 86_400_000;
+      for (const f of fs.readdirSync(this.dir)) {
+        if (!/^\d{4}-\d{2}-\d{2}\.log$/.test(f)) continue;
+        const full = path.join(this.dir, f);
+        if (fs.statSync(full).mtimeMs < cutoff) fs.rmSync(full, { force: true });
+      }
+    } catch {
+      // không dọn được thì thôi, không ảnh hưởng game
+    }
+  }
+
   private write(level: string, msg: string) {
     if (!this.dir) return;
     const d = new Date().toLocaleDateString('sv');

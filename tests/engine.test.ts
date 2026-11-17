@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { comment, makeEngine } from './helpers';
+import { comment, makeEngine, COMMON } from './helpers';
 
 test('một lượt đầy đủ: join, nhiều người trả lời, chốt sau khi hết giờ + chờ trễ, cộng điểm, đổi từ', () => {
   const { engine, events } = makeEngine();
@@ -35,17 +35,18 @@ test('một lượt đầy đủ: join, nhiều người trả lời, chốt sau
 
   const r = engine.lastResult!;
   assert.deepEqual(r.winners.map((w) => [w.userId, w.points]), [['a', 9], ['b', 7], ['c', 5], ['e', 3]]);
-  assert.equal(r.nextWord, 'sinh viên'); // hệ thống tự chọn từ phổ biến nối tiếp
+  assert.ok(COMMON.includes(r.nextWord)); // hệ thống tự chọn từ phổ biến, không lấy đáp án người chơi
+  assert.notEqual(r.nextWord, 'học sinh');
   assert.equal(r.nextSource, 'auto');
   assert.equal(engine.players.get('a')!.score, 9);
   assert.equal(engine.players.get('f'), undefined);
   assert.ok(events.some((e) => e.name === 'game:round_ended'));
 
-  // hết thời gian hiện kết quả: tự sang lượt mới với từ "sinh viên"
+  // hết thời gian hiện kết quả: tự sang lượt mới với từ hệ thống đã chọn
   engine.tick(t + 3000);
-  assert.equal(engine.currentWord, 'sinh viên');
+  assert.equal(engine.currentWord, r.nextWord);
   assert.equal(engine.roundNo, 2);
-  assert.deepEqual(engine.chain.map((c) => c.word), ['học sinh', 'sinh viên']);
+  assert.deepEqual(engine.chain.map((c) => c.word), ['học sinh', r.nextWord]);
 });
 
 test('không cộng điểm trùng: cùng người gửi lại nhiều lần, cùng bình luận tới 2 lần', () => {
@@ -68,11 +69,11 @@ test('từ đã dùng trong chuỗi không được dùng lại', () => {
   const t = 1_000_000;
   engine.start(t);
   engine.handleComment(comment('a', 'viên', t + 100));
-  engine.nextRoundNow(t + 200); // -> sinh viên
-  engine.handleComment(comment('a', 'chức', t + 300));
-  engine.nextRoundNow(t + 400); // -> viên chức
-  assert.equal(engine.currentWord, 'viên chức');
-  assert.ok(engine.used.has('sinh viên'));
+  engine.nextRoundNow(t + 200);
+  const second = engine.currentWord; // hệ thống tự chọn
+  engine.nextRoundNow(t + 400);
+  assert.notEqual(engine.currentWord, second);
+  assert.ok(engine.used.has(second));
   // admin không đổi được sang từ đã dùng / từ chưa có trong từ điển / từ bí đường
   assert.throws(() => engine.setWord('học sinh', t + 500), /đã dùng/);
   assert.throws(() => engine.setWord('sinh đẹp', t + 500), /chưa có trong từ điển/);
@@ -80,13 +81,11 @@ test('từ đã dùng trong chuỗi không được dùng lại', () => {
   engine.setWord('hoạt hình', t + 500);
   engine.handleComment(comment('b', 'ảnh', t + 600));
   assert.equal(engine.round!.correctCount, 1);
-  // người chơi nối ra từ đã dùng: không tính
-  engine.setWord('mùa xuân', t + 700);
-  engine.handleComment(comment('c', 'sắc', t + 800));
-  assert.equal(engine.round!.correctCount, 1);
-  engine.nextRoundNow(t + 900); // -> xuân sắc
-  assert.equal(engine.currentWord, 'xuân sắc');
-  engine.handleComment(comment('d', 'đẹp', t + 1000));
+  // người chơi nối ra từ đã dùng: không tính ("học sinh" đã dùng ở chặng đầu)
+  engine.setWord('học tập', t + 700);
+  engine.handleComment(comment('c', 'sinh', t + 800)); // "học sinh" đã dùng; "tập sinh" không có
+  assert.equal(engine.round!.correctCount, 0);
+  engine.handleComment(comment('d', 'thể', t + 900)); // "tập thể" hợp lệ
   assert.equal(engine.round!.correctCount, 1);
 });
 
@@ -227,7 +226,8 @@ test('không ai trả lời: hệ thống vẫn tự chọn từ tiếp; từ kh
   engine.start(t);
   engine.nextRoundNow(t + 100);
   assert.equal(engine.lastResult!.nextSource, 'auto');
-  assert.equal(engine.currentWord, 'sinh viên');
+  assert.equal(engine.currentWord, engine.lastResult!.nextWord);
+  assert.notEqual(engine.currentWord, 'học sinh');
   // từ khởi đầu cấu hình là từ bí đường ("ảnh" không nối được): vào chặng là tự đổi
   const { engine: e2 } = makeEngine();
   e2.updateConfig({ startWord: 'hình ảnh' });
@@ -241,7 +241,8 @@ test('tắt server bật lại: khôi phục điểm, về tạm dừng, chơi l
   const t = 1_000_000;
   engine.start(t);
   engine.handleComment(comment('a', 'viên', t + 100));
-  engine.nextRoundNow(t + 200); // a: 9 điểm, từ "sinh viên"
+  engine.nextRoundNow(t + 200); // a: 9 điểm
+  const word2 = engine.currentWord;
   engine.handleComment(comment('b', 'chức', t + 300)); // lượt dở, chưa cộng
   const snap = JSON.parse(JSON.stringify(engine.snapshot()));
 
@@ -250,7 +251,7 @@ test('tắt server bật lại: khôi phục điểm, về tạm dừng, chơi l
   assert.equal(e2.phase, 'paused');
   assert.equal(e2.players.get('a')!.score, 9);
   e2.resume(t + 11_000);
-  assert.equal(e2.currentWord, 'sinh viên');
+  assert.equal(e2.currentWord, word2);
   assert.equal(e2.roundNo, 2);
   assert.equal(e2.phase, 'running');
 });
@@ -268,4 +269,26 @@ test('100 người trả lời cùng lúc: đúng thứ tự, đúng bảng đi�
   assert.equal(w.length, 100);
   assert.deepEqual(w.slice(0, 5).map((x) => x.userId), ['u0', 'u1', 'u2', 'u3', 'u4']);
   assert.deepEqual(w.map((x) => x.points).reduce((a, b) => a + b, 0), 9 + 7 + 5 + 3 + 2 * 6 + 1 * 10);
+});
+
+test('dấu trên avatar: đúng = ok, sai = bad, không lộ đáp án; hết chặng thì xoá dấu', () => {
+  const { engine } = makeEngine();
+  const t = 1_000_000;
+  const live = { isConnected: false, viewerCount: 0 };
+  for (const u of ['a', 'b', 'c']) engine.handleComment(comment(u, 'join', t));
+  engine.start(t);
+  engine.handleComment(comment('a', 'viên', t + 500, t + 400)); // "học sinh" + viên: đúng
+  engine.handleComment(comment('b', 'ba', t + 600, t + 500)); // "sinh ba": không có trong từ điển
+  engine.handleComment(comment('c', 'ba', t + 700, t + 600));
+  engine.handleComment(comment('c', 'viên', t + 800, t + 700)); // c sai rồi đúng: tính là đúng
+  const s = engine.overlayState(t + 900, live);
+  assert.deepEqual(s.marks, { a: 'ok', b: 'bad', c: 'ok' });
+  assert.deepEqual(s.wrong.map((w) => w.userId), ['b']);
+  assert.equal(s.wrongCount, 1);
+  assert.ok(!JSON.stringify(s.wrong).includes('"ba"'), 'không lộ đáp án sai');
+  // sau khi chốt: không còn dấu
+  engine.nextRoundNow(t + 1000);
+  const after = engine.overlayState(t + 1100, live);
+  assert.deepEqual(after.marks, {});
+  assert.equal(after.wrongCount, 0);
 });

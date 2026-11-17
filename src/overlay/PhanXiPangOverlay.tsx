@@ -34,7 +34,6 @@ import { MountainTrail } from './MountainTrail';
 import { QuestionBoard } from './QuestionBoard';
 import { ToastView, useToasts } from './ScoreAnimation';
 import { WinnerScreen } from './WinnerScreen';
-import { WordHistory } from './WordHistory';
 import './overlay.css';
 
 /**
@@ -125,13 +124,13 @@ export function PhanXiPangOverlay({ socket, event = 'game:state', sound = false 
       <Header s={s} />
       <QuestionBoard s={s} offset={offset} fx={fx} />
       <TickSound s={s} offset={offset} />
-      <WordHistory chain={s.chain} chainStart={s.chainStart} current={s.word} />
       <MountainTrail seats={s.seats} ended={s.phase === 'ended'} />
       <ContestantSeats
         seats={s.seats}
         seatCount={s.config.seatCount}
         waitingCount={s.waitingCount}
         highlightRound={highlightRound}
+        marks={s.marks}
         fx={fx}
         toast={<ToastView toast={toasts.current} />}
       />

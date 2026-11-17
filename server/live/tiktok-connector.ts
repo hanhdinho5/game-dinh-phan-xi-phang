@@ -194,10 +194,15 @@ export class TikTokConnector {
       // Chưa LIVE thì thư viện có thể treo mãi ở "Đang kết nối": hỏi TikTok trước
       const live = await conn.fetchIsLive().catch(() => true);
       if (!live) throw new Error('TikTok báo tài khoản này CHƯA LIVE. Bấm Phát trực tiếp trong LIVE Studio trước');
-      await Promise.race([
-        conn.connect(),
-        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('quá 30 giây không vào được phòng live')), 30_000)),
-      ]);
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      try {
+        await Promise.race([
+          conn.connect(),
+          new Promise<never>((_, reject) => (timer = setTimeout(() => reject(new Error('quá 30 giây không vào được phòng live')), 30_000))),
+        ]);
+      } finally {
+        clearTimeout(timer);
+      }
     } catch (err) {
       // lần thử cũ đã bị lần kết nối mới thay chỗ: bỏ qua lỗi của nó, đừng hẹn kết nối lại (sẽ đá kết nối đang tốt)
       if (!mine()) return;

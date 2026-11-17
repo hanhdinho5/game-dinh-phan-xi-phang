@@ -10,13 +10,12 @@ import { PlayersPanel } from './PlayersPanel';
 import { PreviewPane } from './PreviewPane';
 import { WordsPanel } from './WordsPanel';
 
-type TabId = 'control' | 'players' | 'words' | 'config' | 'history';
+type TabId = 'control' | 'players' | 'config' | 'more';
 const TABS: [TabId, string][] = [
   ['control', 'Điều khiển'],
   ['players', 'Người chơi'],
-  ['words', 'Từ'],
   ['config', 'Cấu hình'],
-  ['history', 'Lịch sử & Log'],
+  ['more', 'Khác'],
 ];
 
 const TAB_KEY = 'pxp-admin-tab';
@@ -61,12 +60,20 @@ export function PhanXiPangAdmin({ socket }: { socket: GameSocket }) {
                 <>
                   {tab === 'control' && <ControlPanel state={state} />}
                   {tab === 'players' && <PlayersPanel state={state} />}
-                  {tab === 'words' && <WordsPanel state={state} />}
                   {/* luôn giữ bảng cấu hình để không mất phần đang gõ khi đổi tab */}
                   <div className={tab === 'config' ? '' : 'hidden'}>
                     <ConfigPanel config={state.fullConfig} />
                   </div>
-                  {tab === 'history' && <HistoryPanel logs={state.logs} currentSessionId={state.sessionId} />}
+                  {tab === 'more' && (
+                    <div className="space-y-3">
+                      <Fold title="📚 Từ điển &amp; chuỗi từ">
+                        <WordsPanel state={state} />
+                      </Fold>
+                      <Fold title="🕘 Lịch sử &amp; nhật ký">
+                        <HistoryPanel logs={state.logs} currentSessionId={state.sessionId} />
+                      </Fold>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -84,8 +91,17 @@ function tabBadge(id: TabId, s: AdminState): ReactNode {
     return n > 0 ? <span className="rounded-full bg-amber-500 px-1.5 text-[10px] font-bold text-slate-950">{n}</span> : undefined;
   }
   if (id === 'players') return <span className="text-xs text-slate-400">{s.players.length}</span>;
-  if (id === 'history' && s.logs.some((l) => l.level === 'error')) return <span className="h-2 w-2 rounded-full bg-rose-500" />;
+  if (id === 'more' && s.logs.some((l) => l.level === 'error')) return <span className="h-2 w-2 rounded-full bg-rose-500" />;
   return undefined;
+}
+
+function Fold({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <details className="rounded-xl border border-slate-800 bg-slate-900/40 px-4 py-2">
+      <summary className="cursor-pointer py-1 font-semibold text-slate-200" dangerouslySetInnerHTML={{ __html: title }} />
+      <div className="mt-3">{children}</div>
+    </details>
+  );
 }
 
 function TabButton({ active, onClick, badge, children }: { active: boolean; onClick: () => void; badge?: ReactNode; children: ReactNode }) {

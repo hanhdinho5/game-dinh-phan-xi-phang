@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import type { OverlayState, RoundResult } from '../../shared/types';
 import { upperVi } from '../../shared/vietnamese';
-import { Avatar, shortName } from './Avatar';
+import { Avatar, MARK_COLOR, MarkBadge, displayName } from './Avatar';
 import { useServerNow } from '../lib/socket';
 
 type Offset = { current: number };
@@ -14,7 +14,7 @@ type Offset = { current: number };
 export function QuestionBoard({ s, offset, fx }: { s: OverlayState; offset: Offset; fx: boolean }) {
   const showResult = (s.roundPhase === 'reveal' || s.roundPhase === 'waiting') && s.lastResult && s.phase !== 'idle';
   return (
-    <div className="pxp-board absolute overflow-hidden" style={{ left: 24, top: 176, width: 1032, height: 476 }}>
+    <div className="pxp-board absolute overflow-hidden" style={{ left: 24, top: 176, width: 1032, height: 500 }}>
       {/* quét sáng mỗi lượt mới */}
       {fx && s.roundPhase === 'answering' && (
         <div key={`sweep-${s.roundNo}`} className="pxp-sweep pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
@@ -81,7 +81,7 @@ function AskBoard({ s, offset }: { s: OverlayState; offset: Offset }) {
       exit={{ opacity: 0, scale: 1.04 }}
       transition={{ duration: 0.35 }}
     >
-      <div className="flex items-center gap-3 text-[30px] font-extrabold tracking-wide text-sky-200">
+      <div className="flex items-center gap-3 text-[34px] font-extrabold tracking-wide text-sky-200">
         <span className="pxp-pill bg-white/10">
           CHẶNG {s.roundNo}
           {s.config.roundsPerRace > 0 && <span className="text-white/60">/{s.config.roundsPerRace}</span>}
@@ -91,20 +91,20 @@ function AskBoard({ s, offset }: { s: OverlayState; offset: Offset }) {
       <div className="flex items-start">
         <div className="min-w-0 flex-1">
           <motion.div
-            className="mt-1 flex h-[168px] items-center"
+            className="flex h-[150px] items-center"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 260, damping: 18, delay: 0.05 }}
           >
-            <FitWord max={142} maxWidth={700} className="pxp-display pxp-stroke flex items-center gap-[0.14em] font-extrabold leading-[1.18]">
+            <FitWord max={132} maxWidth={700} className="pxp-display pxp-stroke flex items-center gap-[0.14em] font-extrabold leading-[1.18]">
               <span>{first}</span>
               <span className="pxp-link">{last}</span>
             </FitWord>
           </motion.div>
-          <div className="mt-1 text-[40px] font-bold leading-tight">
+          <div className="mt-1 text-[44px] font-bold leading-tight">
             Hãy nối từ <span className="pxp-gold-text pxp-display text-[50px] font-extrabold">“{link}”</span>
           </div>
-          <div className="mt-1 text-[27px] font-semibold text-white/75">
+          <div className="text-[32px] font-semibold leading-tight text-white/80">
             Comment 1 tiếng: <b className="text-white">{link} ➜ ___</b>
           </div>
         </div>
@@ -145,14 +145,14 @@ function Countdown({ remaining, total, locking, paused }: { remaining: number; t
         {locking ? (
           <>
             <div className="text-[64px] leading-none">⏳</div>
-            <div className="mt-1 text-[24px] font-extrabold text-amber-300">ĐANG CHỐT</div>
+            <div className="mt-1 text-[28px] font-extrabold text-amber-300">ĐANG CHỐT</div>
           </>
         ) : (
           <>
             <div className="pxp-display text-[100px] font-extrabold leading-none" style={{ color }}>
               {sec}
             </div>
-            <div className="text-[22px] font-bold text-white/70">giây</div>
+            <div className="text-[30px] font-bold text-white/75">giây</div>
           </>
         )}
       </div>
@@ -160,45 +160,43 @@ function Countdown({ remaining, total, locking, paused }: { remaining: number; t
   );
 }
 
-/** Dải người đã nối đúng trong lượt: chỉ hiện người + thứ tự, KHÔNG hiện đáp án (đỡ chép) */
+/** Dải người đã trả lời trong lượt: ✓ xanh = nối đúng, ✕ đỏ = sai. Chỉ hiện người + dấu, KHÔNG hiện đáp án (đỡ chép) */
 function Answered({ s }: { s: OverlayState }) {
-  const list = s.provisional.slice(0, 9);
-  const more = s.provisional.length - list.length;
+  const ok = s.provisional.slice(0, 6);
+  const bad = s.wrong.slice(-3);
+  const empty = s.provisional.length === 0 && s.wrongCount === 0;
   return (
-    <div className="absolute inset-x-8 bottom-5 flex h-[84px] items-center gap-4 rounded-[22px] bg-black/30 px-5">
-      {s.provisional.length === 0 ? (
-        <div className="text-[28px] font-semibold text-white/60">Chưa có ai nối được</div>
+    <div className="absolute inset-x-8 bottom-5 flex h-[88px] items-center gap-4 rounded-[22px] bg-black/30 px-5">
+      {empty ? (
+        <div className="text-[32px] font-semibold text-white/65">Chưa có ai trả lời</div>
       ) : (
         <>
-          <div className="flex-none text-[28px] font-extrabold text-emerald-300">
-            ✓ {s.provisional.length}
-            <span className="ml-1 text-[22px] font-bold text-white/70">đã nối</span>
+          <div className="flex flex-none items-baseline gap-3 text-[36px] font-extrabold leading-none">
+            <span style={{ color: MARK_COLOR.ok }}>✓ {s.provisional.length}</span>
+            <span style={{ color: MARK_COLOR.bad }}>✕ {s.wrongCount}</span>
           </div>
-          <div className="flex min-w-0 flex-1 items-center gap-2">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
             <AnimatePresence>
-              {list.map((p) => (
-                <motion.div
-                  key={p.userId}
-                  className="relative"
-                  initial={{ scale: 0, y: 20 }}
-                  animate={{ scale: 1, y: 0 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 16 }}
-                >
-                  <Avatar src={p.avatar} name={p.nickname} id={p.userId} size={60} ring={p.rank === 1 ? '#ffc83d' : p.rank <= 3 ? '#e2e8f0' : 'rgba(255,255,255,0.35)'} />
-                  <span
-                    className="absolute -bottom-1 -right-1 flex h-7 min-w-7 items-center justify-center rounded-full px-1 text-[16px] font-extrabold text-slate-900"
-                    style={{ background: p.rank === 1 ? '#ffc83d' : p.rank === 2 ? '#e2e8f0' : p.rank === 3 ? '#f6a560' : '#7dd3fc' }}
-                  >
-                    {p.rank}
-                  </span>
-                </motion.div>
+              {ok.map((p) => (
+                <Chip key={`ok-${p.userId}`} p={p} mark="ok" />
+              ))}
+              {bad.map((p) => (
+                <Chip key={`bad-${p.userId}`} p={p} mark="bad" />
               ))}
             </AnimatePresence>
-            {more > 0 && <div className="ml-1 text-[26px] font-bold text-white/70">+{more}</div>}
           </div>
         </>
       )}
     </div>
+  );
+}
+
+function Chip({ p, mark }: { p: { userId: string; nickname: string; avatar: string }; mark: 'ok' | 'bad' }) {
+  return (
+    <motion.div className="relative flex-none" initial={{ scale: 0, y: 20 }} animate={{ scale: 1, y: 0 }} transition={{ type: 'spring', stiffness: 400, damping: 16 }}>
+      <Avatar src={p.avatar} name={p.nickname} id={p.userId} size={60} ring={MARK_COLOR[mark]} />
+      <MarkBadge mark={mark} size={28} />
+    </motion.div>
   );
 }
 
@@ -211,7 +209,7 @@ const SOURCE_TEXT: Record<RoundResult['nextSource'], string> = {
 
 function ResultBoard({ r, waiting }: { r: RoundResult; waiting: boolean }) {
   const [nFirst, nLast] = upperVi(r.nextWord).split(' ');
-  const top = r.winners.slice(0, 5);
+  const top = r.winners.slice(0, 4);
   return (
     <motion.div
       className="absolute inset-0 px-10 pt-6"
@@ -220,11 +218,11 @@ function ResultBoard({ r, waiting }: { r: RoundResult; waiting: boolean }) {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.35 }}
     >
-      <div className="flex items-center gap-3 text-[30px] font-extrabold tracking-wide">
+      <div className="flex items-center gap-3 text-[34px] font-extrabold tracking-wide">
         <span className="pxp-pill bg-emerald-400 text-slate-900">KẾT QUẢ CHẶNG {r.no}</span>
         <span className="text-white/75">{r.winners.length ? `${r.winners.length} người nối đúng` : 'Không ai nối được'}</span>
       </div>
-      <div className="mt-4 text-[30px] font-extrabold tracking-wide text-sky-200">{SOURCE_TEXT[r.nextSource].toLocaleUpperCase('vi')}</div>
+      <div className="mt-3 text-[34px] font-extrabold tracking-wide text-sky-200">{SOURCE_TEXT[r.nextSource].toLocaleUpperCase('vi')}</div>
       <motion.div
         className="flex h-[150px] items-center"
         initial={{ scale: 0.7, opacity: 0 }}
@@ -240,7 +238,7 @@ function ResultBoard({ r, waiting }: { r: RoundResult; waiting: boolean }) {
           </FitWord>
         )}
       </motion.div>
-      <div className="absolute inset-x-8 bottom-6 flex h-[120px] items-center gap-3">
+      <div className="absolute inset-x-8 bottom-6 flex h-[132px] items-center gap-3">
         {top.map((w, i) => (
           <motion.div
             key={w.userId}
@@ -250,18 +248,18 @@ function ResultBoard({ r, waiting }: { r: RoundResult; waiting: boolean }) {
             transition={{ delay: 0.25 + i * 0.08 }}
           >
             <div className="flex w-full items-center gap-2">
-              <Avatar src={w.avatar} name={w.nickname} id={w.userId} size={46} ring={i === 0 ? '#ffc83d' : undefined} />
-              <div className="min-w-0 flex-1 truncate text-[20px] font-bold">{shortName(w.nickname, 10)}</div>
+              <Avatar src={w.avatar} name={w.nickname} id={w.userId} size={52} ring={i === 0 ? '#ffc83d' : undefined} />
+              <div className="min-w-0 flex-1 truncate text-[26px] font-bold">{displayName(w.nickname, 8)}</div>
             </div>
             <div className="mt-1 flex w-full items-center justify-between">
-              <span className="truncate text-[19px] font-semibold text-white/70">{upperVi(w.answer)}</span>
-              <span className="pxp-display text-[32px] font-extrabold text-amber-300">+{w.points}</span>
+              <span className="truncate text-[24px] font-semibold text-white/75">{upperVi(w.answer)}</span>
+              <span className="pxp-display text-[38px] font-extrabold text-amber-300">+{w.points}</span>
             </div>
           </motion.div>
         ))}
 
       </div>
-      {waiting && <div className="absolute right-8 top-6 text-[24px] font-bold text-amber-300">Chờ chặng tiếp</div>}
+      {waiting && <div className="absolute right-8 top-6 text-[30px] font-bold text-amber-300">Chờ chặng tiếp</div>}
     </motion.div>
   );
 }

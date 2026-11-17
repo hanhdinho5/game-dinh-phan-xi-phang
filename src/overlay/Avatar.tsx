@@ -1,4 +1,5 @@
 import { memo, useState } from 'react';
+import { motion } from 'motion/react';
 
 const COLORS = ['#ff6b6b', '#ffa94d', '#ffd43b', '#69db7c', '#38d9a9', '#4dabf7', '#748ffc', '#da77f2', '#f783ac', '#20c997'];
 const hash = (s: string) => {
@@ -39,4 +40,39 @@ export const Avatar = memo(function Avatar({ src, name, id, size, ring }: { src:
 export function shortName(name: string, max: number) {
   const chars = [...name.trim()];
   return chars.length > max ? `${chars.slice(0, max - 1).join('')}…` : name.trim();
+}
+
+/** Tên hiển thị gọn: người Việt gọi bằng tên (từ cuối), vd "Trần Mai Anh" -> "Anh". Tên 1 từ thì giữ nguyên. */
+export function displayName(name: string, max: number) {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  const out = words.length > 1 ? words[words.length - 1] : (words[0] ?? 'Bạn');
+  return shortName(out, max);
+}
+
+export type Mark = 'ok' | 'bad';
+export const MARK_COLOR: Record<Mark, string> = { ok: '#22c55e', bad: '#ef4444' };
+
+/** Dấu ✓ xanh (nối đúng) / ✗ đỏ (sai) gắn góc dưới phải avatar */
+export function MarkBadge({ mark, size }: { mark: Mark; size: number }) {
+  return (
+    <motion.span
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ type: 'spring', stiffness: 500, damping: 14 }}
+      className="absolute flex items-center justify-center rounded-full font-black text-white"
+      style={{
+        right: -size * 0.1,
+        bottom: -size * 0.12,
+        width: size,
+        height: size,
+        fontSize: size * 0.72,
+        lineHeight: 1,
+        background: MARK_COLOR[mark],
+        border: `${Math.max(2, size / 10)}px solid #fff`,
+        boxShadow: '0 2px 6px rgba(0,0,0,0.5)',
+      }}
+    >
+      {mark === 'ok' ? '✓' : '✕'}
+    </motion.span>
+  );
 }

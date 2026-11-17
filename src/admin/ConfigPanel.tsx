@@ -173,8 +173,9 @@ export function ConfigPanel({ config }: { config: GameConfig }) {
         </div>
       }
     >
+      {/* việc hay chỉnh */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Số ghế trên màn hình" hint="Hết ghế thì vào hàng chờ.">
+        <Field label="Số ghế trên bảng xếp hạng" hint="Hết ghế thì vào hàng chờ.">
           <select className={inputCls} value={draft.seatCount} onChange={(e) => set('seatCount', Number(e.target.value) as SeatCount)}>
             {SEAT_OPTIONS.map((n) => (
               <option key={n} value={n}>
@@ -186,74 +187,66 @@ export function ConfigPanel({ config }: { config: GameConfig }) {
         <Field label="Thời gian mỗi chặng (giây)" error={errors.roundSeconds} hint="Nên 10–15 giây.">
           {numInput('roundSeconds')}
         </Field>
-        <Field label="Thời gian hiện kết quả (giây)" error={errors.revealSeconds} hint="1–30 giây.">
-          {numInput('revealSeconds')}
-        </Field>
-        <Field
-          label="Bù độ trễ hình TikTok (giây)"
-          error={errors.lateGraceSec}
-          hint="Nhận thêm sau khi hết giờ. Nên 3 giây."
-        >
-          {numInput('lateGraceSec')}
-        </Field>
-        <Field label="Số lần sai tối đa mỗi chặng" error={errors.maxWrongPerRound} hint="Chống đoán bừa.">
-          {numInput('maxWrongPerRound')}
-        </Field>
-        <Field label="Từ khởi đầu" hint="Để trống = tự chọn.">
-          <input className={inputCls} placeholder="tự chọn" value={draft.startWord} onChange={(e) => set('startWord', e.target.value)} />
-        </Field>
-        <div className="md:col-span-2">
-          <Field
-            label="Bảng điểm theo thứ hạng"
-            error={tierResult.error}
-            hint={
-              <>
-                Viết kiểu <code className="text-sky-300">9,7,5,3,2x6,1x10</code> (2x6 = 6 hạng tiếp theo mỗi người 2 điểm).
-                {tierResult.tiers && <span className="mt-1 block text-emerald-300">{tierPreview(tierResult.tiers)}</span>}
-              </>
-            }
-          >
-            <input className={`${inputCls} font-mono ${tierResult.error ? 'border-rose-500' : ''}`} value={draft.tiers} onChange={(e) => set('tiers', e.target.value)} />
-          </Field>
-        </div>
-      </div>
-
-      <div className="mt-4 grid gap-1 border-t border-slate-800 pt-4 md:grid-cols-2">
-        {toggle('autoAdvance', 'Tự chuyển chặng')}
-        {toggle('effectsEnabled', 'Hiệu ứng')}
-        {toggle('soundEnabled', 'Âm thanh trên overlay')}
-        {toggle('autoJoinOnAnswer', 'Nối đúng là tự vào game')}
-      </div>
-
-      <h3 className="mt-5 border-t border-slate-800 pt-4 font-semibold text-amber-300">🏁 Cuộc đua &amp; vinh danh</h3>
-      <div className="mt-2 grid gap-4 md:grid-cols-2">
         <Field label="Số chặng mỗi cuộc đua" error={errors.roundsPerRace} hint="0 = tự bấm Kết thúc.">
           {numInput('roundsPerRace')}
         </Field>
-        <Field label="Thời gian vinh danh (giây)" error={errors.raceBreakSeconds} hint="Nên 25–40 giây.">
-          {numInput('raceBreakSeconds')}
-        </Field>
-      </div>
-      <div className="mt-2 grid gap-1 md:grid-cols-2">
-        {toggle('autoNewRace', 'Tự mở cuộc đua mới sau vinh danh')}
-      </div>
-
-      <h3 className="mt-5 border-t border-slate-800 pt-4 font-semibold text-amber-300">🎙️ Giọng MC</h3>
-      <div className="mt-2 grid gap-4 md:grid-cols-2">
-        <Field label="Giọng" hint="Cần mạng internet.">
+        <Field label="Giọng MC" hint="Cần mạng internet.">
           <select className={inputCls} value={draft.voiceGender} onChange={(e) => set('voiceGender', e.target.value as 'f' | 'm')}>
             <option value="f">Nữ (Hoài My)</option>
             <option value="m">Nam (Nam Minh)</option>
           </select>
         </Field>
-        <Field label="Tốc độ đọc" error={errors.voiceRate} hint="Nên 1.1–1.25.">
-          {numInput('voiceRate')}
-        </Field>
       </div>
-      <div className="mt-2 grid gap-1 md:grid-cols-2">
+      <div className="mt-3 grid gap-1 md:grid-cols-2">
         {toggle('voiceEnabled', 'Bật giọng MC')}
-        {toggle('voiceChatter', 'MC chào, cảm ơn quà, nhắc luật')}
+        {toggle('soundEnabled', 'Âm thanh trên overlay')}
+        {toggle('autoNewRace', 'Tự mở cuộc đua mới sau vinh danh')}
       </div>
+
+      {/* ít khi đụng tới */}
+      <details className="mt-5 rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2">
+        <summary className="cursor-pointer text-sm font-semibold text-slate-300">Nâng cao (thường để mặc định)</summary>
+        <div className="mt-3 grid gap-4 md:grid-cols-2">
+          <Field label="Thời gian hiện kết quả (giây)" error={errors.revealSeconds} hint="1–30 giây.">
+            {numInput('revealSeconds')}
+          </Field>
+          <Field label="Bù độ trễ hình TikTok (giây)" error={errors.lateGraceSec} hint="Nhận thêm sau khi hết giờ. Nên 3 giây.">
+            {numInput('lateGraceSec')}
+          </Field>
+          <Field label="Số lần sai tối đa mỗi chặng" error={errors.maxWrongPerRound} hint="Chống đoán bừa.">
+            {numInput('maxWrongPerRound')}
+          </Field>
+          <Field label="Thời gian vinh danh (giây)" error={errors.raceBreakSeconds} hint="Nên 25–40 giây.">
+            {numInput('raceBreakSeconds')}
+          </Field>
+          <Field label="Tốc độ đọc của MC" error={errors.voiceRate} hint="Nên 1.1–1.25.">
+            {numInput('voiceRate')}
+          </Field>
+          <Field label="Từ khởi đầu" hint="Để trống = tự chọn.">
+            <input className={inputCls} placeholder="tự chọn" value={draft.startWord} onChange={(e) => set('startWord', e.target.value)} />
+          </Field>
+          <div className="md:col-span-2">
+            <Field
+              label="Bảng điểm theo thứ hạng"
+              error={tierResult.error}
+              hint={
+                <>
+                  Viết kiểu <code className="text-sky-300">9,7,5,3,2x6,1x10</code> (2x6 = 6 hạng tiếp theo mỗi người 2 điểm).
+                  {tierResult.tiers && <span className="mt-1 block text-emerald-300">{tierPreview(tierResult.tiers)}</span>}
+                </>
+              }
+            >
+              <input className={`${inputCls} font-mono ${tierResult.error ? 'border-rose-500' : ''}`} value={draft.tiers} onChange={(e) => set('tiers', e.target.value)} />
+            </Field>
+          </div>
+        </div>
+        <div className="mt-3 grid gap-1 border-t border-slate-800 pt-3 md:grid-cols-2">
+          {toggle('autoAdvance', 'Tự chuyển chặng')}
+          {toggle('effectsEnabled', 'Hiệu ứng')}
+          {toggle('autoJoinOnAnswer', 'Nối đúng là tự vào game')}
+          {toggle('voiceChatter', 'MC chào, cảm ơn quà, nhắc luật')}
+        </div>
+      </details>
     </Card>
   );
 }

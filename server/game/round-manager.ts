@@ -181,6 +181,19 @@ export class Round {
     return this.accepted.map((e, i) => ({ ...e, rank: i + 1 }));
   }
 
+  /** Những người đã gửi đáp án sai (chưa có đáp án đúng nào) trong lượt, theo thứ tự giờ gửi. Không kèm đáp án. */
+  wrongUsers() {
+    const seen = new Map<string, AnswerEntry>();
+    for (const b of this.rejected.values()) {
+      for (const e of b.entries) {
+        if (this.answered.has(e.userId)) continue;
+        const cur = seen.get(e.userId);
+        if (!cur || cmpEntry(cur, e) > 0) seen.set(e.userId, e);
+      }
+    }
+    return [...seen.values()].sort(cmpEntry);
+  }
+
   get correctCount() {
     return this.accepted.length;
   }
@@ -240,23 +253,20 @@ export interface NextWordChoice {
 }
 
 /**
- * Hệ thống tự chọn từ cho chặng sau (KHÔNG lấy đáp án của người chơi):
- *  1. Từ phổ biến bắt đầu bằng tiếng cuối của từ hiện tại, chưa dùng, mà chặng sau vẫn còn
- *     từ phổ biến để nối (người chơi dễ nghĩ ra).
- *  2. Không có: từ phổ biến nối tiếp được, chặng sau còn từ (bất kỳ) để nối.
- *  3. Hết cách: đổi sang 1 từ khởi đầu phổ biến mới.
+ * Hệ thống tự chọn từ cho chặng sau: một từ phổ biến NGẪU NHIÊN, không nối với từ hiện tại
+ * (KHÔNG lấy đáp án của người chơi). Chặng sau còn từ để nối, chưa dùng, và tiếng cuối khác
+ * từ hiện tại để bình luận trễ của chặng trước ít khi trùng với chặng sau.
  */
 export function chooseNextWord(currentWord: string, bank: WordBank, used: ReadonlySet<string>, rng: () => number): NextWordChoice {
-  const candidates = bank.commonContinuations(lastSyllable(currentWord)).filter((w) => w !== currentWord && !used.has(w));
-  const easy = candidates.filter((w) => bank.commonContinuations(lastSyllable(w)).some((x) => x !== w && !used.has(x)));
-  const pool = easy.length ? easy : candidates.filter((w) => hasOpenContinuation(bank, w, used));
-  if (pool.length) return { word: pool[Math.floor(rng() * pool.length)], source: 'auto' };
-  return { word: pickStartWord(bank, used, rng), source: 'jump' };
+  return { word: pickStartWord(bank, used, rng, lastSyllable(currentWord)), source: 'auto' };
 }
 
 /** Từ khởi đầu ngẫu nhiên: phổ biến, chưa dùng, còn nối tiếp được bằng từ phổ biến. */
-export function pickStartWord(bank: WordBank, used: ReadonlySet<string>, rng: () => number): string {
-  const all = bank.allCommon();
+export function pickStartWord(bank: WordBank, used: ReadonlySet<string>, rng: () => number, avoidLast = ''): string {
+  const everything = bank.allCommon();
+  // tránh từ có cùng tiếng cuối với từ trước (nếu còn lựa chọn khác)
+  const differ = avoidLast ? everything.filter((w) => lastSyllable(w) !== avoidLast) : everything;
+  const all = differ.length ? differ : everything;
   const good = all.filter((w) => !used.has(w) && bank.commonContinuations(lastSyllable(w)).some((x) => !used.has(x) && x !== w));
   const pool = good.length ? good : all.filter((w) => !used.has(w) && hasOpenContinuation(bank, w, used));
   if (pool.length) return pool[Math.floor(rng() * pool.length)];

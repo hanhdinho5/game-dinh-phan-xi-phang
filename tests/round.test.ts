@@ -100,21 +100,29 @@ test('chống trùng sự kiện theo mã', () => {
   assert.ok(d.check('a'));
 });
 
-test('chọn từ tiếp: hệ thống tự chọn từ phổ biến nối tiếp, chặng sau vẫn nối được; hết thì đổi từ mới', () => {
+test('chọn từ tiếp: hệ thống tự chọn từ phổ biến ngẫu nhiên, không nối từ hiện tại, tiếng cuối khác, chặng sau vẫn nối được', () => {
   const bank = makeBank();
   const used = new Set(['học sinh']);
-  // "sinh" -> chỉ có "sinh viên" là từ phổ biến (sinh nhật, sinh động... không phổ biến nên hệ thống không chọn)
-  for (let i = 0; i < 20; i++) assert.deepEqual(chooseNextWord('học sinh', bank, used, Math.random), { word: 'sinh viên', source: 'auto' });
-  // ưu tiên từ mà chặng sau còn từ phổ biến để nối: "học tập" (-> tập thể) hơn từ phổ biến bí đường
-  bank.add('học bạ', true); // "bạ" không có từ nào nối tiếp
-  used.add('chức vụ');
-  for (let i = 0; i < 20; i++) assert.equal(chooseNextWord('viên chức', bank, used, Math.random).source, 'jump');
-  for (let i = 0; i < 20; i++) assert.equal(chooseNextWord('sinh học', bank, used, Math.random).word, 'học tập');
-  // dùng hết: đổi sang từ khởi đầu mới chưa dùng
-  used.add('sinh viên');
-  const c = chooseNextWord('học sinh', bank, used, () => 0);
-  assert.equal(c.source, 'jump');
-  assert.ok(!used.has(c.word));
+  const seen = new Set<string>();
+  for (let i = 0; i < 200; i++) {
+    const c = chooseNextWord('học sinh', bank, used, Math.random);
+    assert.equal(c.source, 'auto');
+    assert.ok(!used.has(c.word), 'chưa dùng');
+    assert.notEqual(c.word.split(' ')[1], 'sinh', 'tiếng cuối khác từ hiện tại');
+    assert.ok(bank.commonContinuations(c.word.split(' ')[1]).some((x) => x !== c.word && !used.has(x)), 'chặng sau còn từ để nối');
+    seen.add(c.word);
+  }
+  assert.ok(seen.size > 1, 'ngẫu nhiên, không cố định một từ');
+  // chỉ còn từ cùng tiếng cuối thì vẫn chọn được (không bí)
+  const left = new Set(bank.allCommon().filter((w) => w !== 'học tập' && w !== 'tập thể'));
+  assert.ok(['học tập', 'tập thể'].includes(chooseNextWord('thể thao', bank, left, Math.random).word));
+  // dùng hết từ phổ biến: vẫn ra từ chưa dùng trong từ điển, hoặc báo hết từ
+  const all = new Set(bank.allCommon());
+  try {
+    assert.ok(!all.has(chooseNextWord('học sinh', bank, all, () => 0).word));
+  } catch (err) {
+    assert.match((err as Error).message, /không còn từ nào chưa dùng/);
+  }
 });
 
 test('xếp ghế: điểm cao trước, bằng điểm thì ai đạt trước, rồi ai vào trước', () => {

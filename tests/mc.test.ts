@@ -47,7 +47,7 @@ test('MC đọc kết quả: tên người nhanh nhất (đã lọc cho dễ đ�
   assert.ok(result, 'có câu kết quả');
   assert.match(plain(result), /Lan Anh/);
   assert.doesNotMatch(result.text, /🌸/);
-  assert.match(plain(result), /sinh viên/);
+  assert.ok(plain(result).includes(engine.lastResult!.nextWord), 'MC đọc từ mới');
   assert.match(plain(result), /2 (người|bạn) nối đúng/);
 });
 

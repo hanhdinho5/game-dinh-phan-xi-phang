@@ -34,9 +34,12 @@ const PORT = Number(process.env.PORT) || 3007; // Lớp Học Chữ dùng 3006
 const DATA_DIR = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : path.join(ROOT, 'data');
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN?.trim() ?? '';
 // Giả lập: mặc định bật (chỉ khi CHƯA kết nối TikTok thật). DISABLE_MOCK=1 để tắt hẳn.
+// --prod (pnpm start): phục vụ bản đã build trong dist/ thay vì Vite dev server (nhẹ, ổn định cho buổi live)
+const PROD = process.env.NODE_ENV === 'production' || process.argv.includes('--prod');
 const MOCK_ENABLED = process.env.DISABLE_MOCK !== '1';
 
 const log = new Logger(path.join(DATA_DIR, 'logs'));
+log.prune(30);
 const store = new JsonStore(DATA_DIR, log);
 
 // ---------- ngân hàng từ ----------
@@ -164,7 +167,7 @@ app.use('/assets', express.static(path.join(ROOT, 'public', 'assets')));
 setupTts(app, log);
 
 async function start() {
-  if (process.env.NODE_ENV !== 'production') {
+  if (!PROD) {
     const { createServer } = await import('vite');
     const vite = await createServer({
       root: ROOT,
@@ -177,6 +180,10 @@ async function start() {
     });
     app.use(vite.middlewares);
   } else {
+    if (!fs.existsSync(path.join(ROOT, 'dist', 'index.html'))) {
+      log.error('Chưa có dist/. Chạy "pnpm build" trước (hoặc dùng "pnpm dev")');
+      process.exit(1);
+    }
     app.use(express.static(path.join(ROOT, 'dist')));
     app.get('*', (_req, res) => res.sendFile(path.join(ROOT, 'dist', 'index.html')));
   }
